@@ -1,4 +1,5 @@
 import { PrismaClient } from "@prisma/client";
+import { hash } from "bcrypt";
 const prisma = new PrismaClient();
 
 export default {
@@ -16,12 +17,14 @@ export default {
         return response.status(400).json({ message: "Usuário já existe" });
       }
 
+      const HashPassword = await hash(password, 8);
+
       // Crie um novo usuário usando prisma.user.create
       const newUser = await prisma.user.create({
         data: {
           name,
           email,
-          password,
+          password: HashPassword
         },
       });
 
@@ -34,4 +37,14 @@ export default {
       await prisma.$disconnect();
     }
   },
+  async findAllUser(request, response) {
+    try {
+      const user = await prisma.user.findMany();
+      return response.json(user);
+
+    } catch (error) {
+      return response.json({ message: error.message })
+
+    }
+  }
 };

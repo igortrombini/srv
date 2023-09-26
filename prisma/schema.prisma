@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -15,6 +12,23 @@ model User {
   name     String
   email    String @unique
   password String
+  imobis   Imobi[] // Define a one-to-many relationship with Imobi
 
   @@map("users")
+}
+
+model Imobi {
+  id         Int      @id @default(autoincrement())
+  tipo       String?
+  thumb      String?
+  endereco   String?
+  cidade     String?
+  uf         String?
+  valor      String?
+  descricao  String?
+  userId     Int
+  created_at DateTime @default(now())
+  author     User     @relation(fields: [userId], references: [id]) // Define the relationship with User
+
+  @@map("imoveis")
 }
