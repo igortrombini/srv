@@ -1,21 +1,25 @@
 import { Router } from "express";
-import UserController from "./controllers/UserController";
 import SessionController from "./controllers/SessionController";
+import UserController from "./controllers/UserController";
 import auth from "./middlewares/auth";
-import ImobiController from "./controllers/ImobiController";
 
 import multer from "multer";
 import uploadConfig from "./middlewares/upload";
+import ImobiController from "./controllers/ImobiController";
+import MessageController from "./controllers/MessageController";
 
 const upload = multer(uploadConfig);
 
 const router = Router();
 
 router.post('/createusers', UserController.createUser);
-router.get('/listusers', auth, UserController.findAllUser);
+router.get('/listusers', UserController.findAllUser);
+router.get('/listusers/:userId', UserController.findUser);
 router.post('/session', SessionController.createSession);
-router.post('/createimobi',upload.single("thumb"), ImobiController.createImobi);
+router.post('/createimobi', upload.single("thumb"), ImobiController.craeteImobi);
 router.get('/listimobi', ImobiController.findAllImobi);
-router.get('/listimobi/:id', ImobiController.findImobi);
+router.get('/listimobi/:slug', ImobiController.findImobi);
+router.post('/createmessage', MessageController.createMessage);
+router.get('/listmessage/:id', MessageController.findMessage);
 
 export { router }

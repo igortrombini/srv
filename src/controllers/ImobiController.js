@@ -2,61 +2,107 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 export default {
-    async createImobi(request, response) {
-        try {
-            const thumb = request.file.filename;
-            const { id, tipo, endereco, cidade, uf, valor, descricao } = request.body;
+  async craeteImobi(request, response) {
+    try {
+      const thumb = request.file.filename;
+  
+      const { id, name, email, telefone, tipo, endereco, cidade, uf, valor, descricao } = request.body;
 
-            const user = await prisma.user.findUnique({ where: { id: Number(id) } });
-            if (!user) {
-                return response.status(404).json({ message: "Usuário Não Encontrado!" });
-            }
+      const user = await prisma.user.findUnique({ where: { id: Number(id) } });
 
-            const imobi = await prisma.imobi.create({
-                data: {
-                    thumb,
-                    tipo,
-                    endereco,
-                    cidade,
-                    uf,
-                    valor,
-                    descricao,
-                    userId: user.id
-                }
-            });
+      if (!user) {
+        return response.json({ message: "Usuario inexistente" });
+      }
 
-            return response.json(imobi);
+      const slugify = str => 
+        str
+          .toLowerCase()
+          .trim()
+          .replace(/[^\w\s-]/g, '')
+          .replace(/[\s_-]+/g, '-')
+          .replace(/^-+|-+$/g, '');
 
-        } catch (error) {
-            console.error(error);
-            return response.status(500).json({ message: "Erro ao criar o Imóvel." });
+        const slug = slugify(tipo);
+
+      const imobi = await prisma.imobi.create({
+        data: {
+          thumb,
+          tipo,
+          endereco,
+          cidade,
+          uf,
+          valor,
+          descricao,
+          name, 
+          email, 
+          telefone,
+          slug,
+          userId: user.id,
         }
-    },
-    async findAllImobi(request, response) {
-        try {
-            const imobi = await prisma.imobi.findMany();
+      });
 
+      return response.json({
+        error: true,
+        message: "Sucesso: Imóvel cadastrado com sucesso!" ,
+        imobi
+      });
 
-            return response.json(imobi);
-
-        } catch (error) {
-            console.error(error);
-            return response.status(500).json({ message: "Erro ao criar o Imóvel." });
-        }
-    },
-    async findImobi(request, response) {
-        try {
-            const { id } = request.params;
-            const imobi = await prisma.imobi.findUnique({ where: { id: Number(id) } });
-
-            if (!imobi) {
-                return response.json({ message: "Não foi possivel encontrar o imovel" });
-            }
-            return response.json(imobi);
-
-        } catch (error) {
-            console.error(error);
-            return response.status(500).json({ message: "Erro ao criar o Imóvel." });
-        }
+    } catch (error) {
+      return response.json({ message: error.message });
     }
-}
+  },
+  async findAllImobi(request, response) {
+    try {
+
+      const imobi = await prisma.imobi.findMany({
+        include: {
+          author: true,
+        }
+      });
+
+      return response.json(imobi);
+
+    } catch (error) {
+      return response.json({ message: error.message });
+    }
+  },
+  async findImobi(request, response) {
+    try {
+      const { slug } = request.params;
+
+      const imobi = await prisma.imobi.findFirst({
+        where: {
+          slug: slug
+        }
+      });
+
+      if (!imobi) {
+        return response.json({ message: "Não encontramos nenhum imóvel cadstrado!" })
+      }
+
+      return response.json(imobi);
+
+    } catch (error) {
+      return response.json({ message: error.message })
+    }
+  },
+  async createMessage(request, response) {
+    try {
+      const { name, email, messagem, userId } = request.body;
+
+      const message = await prisma.message.create({
+        data: {
+          name, 
+          email, 
+          messagem, 
+          userId
+        }
+      });
+
+      return response.json(message);
+
+    } catch (error) {
+      return response.json({ message: error.message })
+    }
+  }
+};
