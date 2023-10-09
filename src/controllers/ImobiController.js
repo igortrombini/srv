@@ -1,108 +1,54 @@
+// ImobiController.js
+
 import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 export default {
   async craeteImobi(request, response) {
-    try {
-      const thumb = request.file.filename;
-  
-      const { id, name, email, telefone, tipo, endereco, cidade, uf, valor, descricao } = request.body;
+    // ... (código existente para criar um imóvel)
 
-      const user = await prisma.user.findUnique({ where: { id: Number(id) } });
-
-      if (!user) {
-        return response.json({ message: "Usuario inexistente" });
-      }
-
-      const slugify = str => 
-        str
-          .toLowerCase()
-          .trim()
-          .replace(/[^\w\s-]/g, '')
-          .replace(/[\s_-]+/g, '-')
-          .replace(/^-+|-+$/g, '');
-
-        const slug = slugify(tipo);
-
-      const imobi = await prisma.imobi.create({
-        data: {
-          thumb,
-          tipo,
-          endereco,
-          cidade,
-          uf,
-          valor,
-          descricao,
-          name, 
-          email, 
-          telefone,
-          slug,
-          userId: user.id,
-        }
-      });
-
-      return response.json({
-        error: true,
-        message: "Sucesso: Imóvel cadastrado com sucesso!" ,
-        imobi
-      });
-
-    } catch (error) {
-      return response.json({ message: error.message });
-    }
+    return response.json({
+      error: false,
+      message: "Sucesso: Imóvel cadastrado com sucesso!",
+      imobi,
+    });
   },
+
   async findAllImobi(request, response) {
-    try {
+    // ... (código existente para buscar todos os imóveis)
 
-      const imobi = await prisma.imobi.findMany({
-        include: {
-          author: true,
-        }
-      });
-
-      return response.json(imobi);
-
-    } catch (error) {
-      return response.json({ message: error.message });
-    }
+    return response.json(imobi);
   },
-  async findImobi(request, response) {
-    try {
-      const { slug } = request.params;
 
-      const imobi = await prisma.imobi.findFirst({
+  async findImobi(request, response) {
+    // ... (código existente para buscar um imóvel por slug)
+
+    return response.json(imobi);
+  },
+
+  async findImobiByCity(request, response) {
+    try {
+      const { cityName } = request.params;
+
+      const imoveis = await prisma.imobi.findMany({
         where: {
-          slug: slug
-        }
+          cidade: cityName,
+        },
       });
 
-      if (!imobi) {
-        return response.json({ message: "Não encontramos nenhum imóvel cadstrado!" })
+      if (!imoveis || imoveis.length === 0) {
+        return response.status(404).json({ message: "Não foram encontrados imóveis para esta cidade." });
       }
 
-      return response.json(imobi);
-
+      return response.json({ imoveis });
     } catch (error) {
-      return response.json({ message: error.message })
+      return response.status(500).json({ message: error.message });
     }
   },
+
   async createMessage(request, response) {
-    try {
-      const { name, email, messagem, userId } = request.body;
+    // ... (código existente para criar uma mensagem)
 
-      const message = await prisma.message.create({
-        data: {
-          name, 
-          email, 
-          messagem, 
-          userId
-        }
-      });
-
-      return response.json(message);
-
-    } catch (error) {
-      return response.json({ message: error.message })
-    }
-  }
+    return response.json(message);
+  },
 };
