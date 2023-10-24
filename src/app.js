@@ -1,7 +1,9 @@
+import 'dotenv/config';
 import express from "express";
 import cors from "cors";
 import path from 'node:path';
 import { router } from "./routes";
+
 
 const app = express();
 //SERVE IMAGENS STATICAS
@@ -21,3 +23,4 @@ app.use(router);
 app.listen(8000, () => {
   console.log("Server is runing 8000");
 })
+console.log(process.env.DATABASE_URL);
