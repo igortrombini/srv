@@ -7,11 +7,14 @@ import multer from "multer";
 import uploadConfig from "./middlewares/upload";
 import ImobiController from "./controllers/ImobiController";
 import MessageController from "./controllers/MessageController";
+import pesquisarImoveis from "./controllers/PesquisaController";
 
 const upload = multer(uploadConfig);
 
 const router = Router();
 
+
+router.get('/pesquisar-imoveis', pesquisarImoveis);
 router.post('/createusers', UserController.createUser);
 router.get('/listusers', UserController.findAllUser);
 router.get('/listusers/:userId', UserController.findUser);
