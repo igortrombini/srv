@@ -7,9 +7,10 @@ const upoloadConfig = require('../middlewares/upload');
 
 class S3storage {
     constructor() {
-        this.client = new aws.S3({
+        this.client = new S3({
             region: 'sa-east-1',
         });
+
     }
 
     async saveFile(filename) {
