@@ -9,7 +9,7 @@ export default {
       //Upload na amazon
       const {file} = request;
 
-      const uploadImagesService = new UploadImagesServiceervice();
+      const uploadImagesService = new UploadImagesService();
       await uploadImagesService.execute(file);            
 
 
