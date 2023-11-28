@@ -14,7 +14,7 @@ class S3storage {
     }
 
     async saveFile(filename) {
-        const originalPath = path.resolve(upoloadConfig.directory, filename);
+        const originalPath = path.resolve(uploadConfig.directory, filename);
 
         const ContentType = mime.getType(originalPath);
 
