@@ -5,7 +5,13 @@ export default {
   async createImobi(request, response) {
     try {
       const thumb = request.file.filename;
-  
+      //Upload na amazon
+      const {file} = request;
+
+      const uploadImagesService = new UploadImagesService();
+      await uploadImagesService.execute(file);            
+
+
       const { id, name, email, telefone, tipo, endereco, cidade, uf, valor, descricao } = request.body;
 
       const user = await prisma.user.findUnique({ where: { id: Number(id) } });
@@ -14,7 +20,7 @@ export default {
         return response.json({ message: "Usuario inexistente" });
       }
 
-      const slugify = str => 
+      const slugify = str =>
         str
           .toLowerCase()
           .trim()
@@ -22,7 +28,7 @@ export default {
           .replace(/[\s_-]+/g, '-')
           .replace(/^-+|-+$/g, '');
 
-        const slug = slugify(tipo);
+      const slug = slugify(tipo);
 
       const imobi = await prisma.imobi.create({
         data: {
@@ -33,8 +39,8 @@ export default {
           uf,
           valor,
           descricao,
-          name, 
-          email, 
+          name,
+          email,
           telefone,
           slug,
           userId: user.id,
@@ -43,7 +49,7 @@ export default {
 
       return response.json({
         error: true,
-        message: "Sucesso: Imóvel cadastrado com sucesso!" ,
+        message: "Sucesso: Imóvel cadastrado com sucesso!",
         imobi
       });
 
@@ -92,9 +98,9 @@ export default {
 
       const message = await prisma.message.create({
         data: {
-          name, 
-          email, 
-          messagem, 
+          name,
+          email,
+          messagem,
           userId
         }
       });
