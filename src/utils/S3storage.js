@@ -3,7 +3,7 @@ import path from 'path';
 import mime from 'mime';
 import fs from 'fs';
 
-const upoloadConfig = require('../middlewares/upload');
+const uploadConfig = require('../middlewares/upload');
 
 class S3storage {
     constructor() {
