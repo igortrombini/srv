@@ -7,7 +7,7 @@ const tempUpload = path.resolve(tempFolder, "uploads");
 
 export default {
   directory: tempFolder,
-  uolodadFolder: tempUpload,
+  uploadFolder: tempUpload,
   storage: multer.diskStorage({
     destination: tempFolder,
     filename(request, file, callback) {

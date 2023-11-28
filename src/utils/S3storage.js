@@ -2,8 +2,8 @@ import { S3 } from '@aws-sdk/client-s3'
 import path from 'path';
 import mime from 'mime';
 import fs from 'fs';
+import uploadConfig from '../middlewares/upload'
 
-const uploadConfig = require('../middlewares/upload');
 
 class S3storage {
     constructor() {
