@@ -4,7 +4,7 @@ class UploadImagesService {
     async execute(file) {
         const s3storage = new S3Storage();
 
-        await s3storage.saveFile(file.filename);
+        await s3storage.saveFile(file.nameFile);
     }
 }
 

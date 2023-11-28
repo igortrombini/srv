@@ -13,8 +13,8 @@ class S3storage {
 
     }
 
-    async saveFile(filename) {
-        const originalPath = path.resolve(uploadConfig.directory, filename);
+    async saveFile(nameFile) {
+        const originalPath = path.resolve(uploadConfig.directory, nameFile);
 
         const ContentType = mime.getType(originalPath);
 
@@ -26,7 +26,7 @@ class S3storage {
 
         await this.client.putObject({
             Bucket: 'imobi-server',
-            Key: filename,
+            Key: nameFile,
             ACL: 'public-read',
             Body: fileContent,
             ContentType,
