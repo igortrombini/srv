@@ -1,4 +1,5 @@
 import { PrismaClient } from "@prisma/client";
+import UploadImagesService from "../services/UploadImagesService";
 const prisma = new PrismaClient();
 
 export default {
@@ -8,7 +9,7 @@ export default {
       //Upload na amazon
       const {file} = request;
 
-      const uploadImagesService = new UploadImagesService();
+      const uploadImagesService = new UploadImagesServiceervice();
       await uploadImagesService.execute(file);            
 
 

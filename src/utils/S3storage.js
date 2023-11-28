@@ -1,4 +1,4 @@
-import aws, { S3 } from 'aws-sdk';
+import { S3 } from '@aws-sdk/client-s3'
 import path from 'path';
 import mime from 'mime';
 import fs from 'fs';
