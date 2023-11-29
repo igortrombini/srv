@@ -7,10 +7,10 @@ export default {
     try {
       const thumb = request.file.filename;
       //Upload na amazon
-      const {file} = request;
-
+      const { file } = request;
       const uploadImagesService = new UploadImagesService();
-      await uploadImagesService.execute(file);            
+
+      await uploadImagesService.execute(file);
 
 
       const { id, name, email, telefone, tipo, endereco, cidade, uf, valor, descricao } = request.body;
@@ -31,9 +31,13 @@ export default {
 
       const slug = slugify(tipo);
 
+      // Concatenar AWS_BUCKET_URL com o nome do arquivo thumb
+      const awsBucketUrl = process.env.AWS_BUCKET_URL;
+      const thumbUrl = `${awsBucketUrl}/${thumb}`;
+
       const imobi = await prisma.imobi.create({
         data: {
-          thumb,
+          thumb: thumbUrl, // Usar a URL completa para o campo thumb
           tipo,
           endereco,
           cidade,
@@ -75,11 +79,11 @@ export default {
   },
   async findImobi(request, response) {
     try {
+      //slug deveria ser o id
       const { slug } = request.params;
-
-      const imobi = await prisma.imobi.findFirst({
+      const imobi = await prisma.imobi.findUnique({
         where: {
-          slug: slug
+          id: parseInt(slug, 10),
         }
       });
 

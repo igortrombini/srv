@@ -14,7 +14,9 @@ export default {
       const hashFile = crypto.randomBytes(10).toString("hex");
       const nameFile = `${hashFile}-${file.originalname}`;
 
+      console.log("nameFile:", nameFile);
+
       return callback(null, nameFile);
     }
   })
-}
+};
